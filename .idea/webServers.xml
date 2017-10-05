@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="caf4167c-f067-4d40-9462-5ef544fdd0f9" name="euijoon_aws" url="http://52.79.180.194">
+        <fileTransfer host="52.79.180.194" port="22" privateKey="C:\Users\admin\Desktop\jibcon_2.pem" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
