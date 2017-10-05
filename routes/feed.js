@@ -79,7 +79,25 @@ router.put('/editFeed/:feedId',(req,res)=>{
     });
 
 });
-router.post('/addComment',(req,res)=>{
+router.put('/addLike/:feedId',(req,res)=>{
+    //좋아요 누르기
+    Feed.findOne({_id:req.params.feedId},(err,feed)=>{
+        if(err) res.status(403).end();
+        else{
+            var likes = parseInt(feed.like)+1;
+            feed.like = likes.toString();
+
+            feed.save((err,feed)=>{
+                if(err)
+                    res.status(403).end();
+                else
+                    res.status(201).json(feed);
+            });
+        }
+    });
+});
+
+router.post('/addComment/:feedId',(req,res)=>{
     //댓글 달기
 });
 router.delete('/deleteComment',(req,res)=>{
