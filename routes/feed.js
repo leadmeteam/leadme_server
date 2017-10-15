@@ -20,6 +20,8 @@ router.get('/getFeed/:standard', (req, res) => {
             res.status(201).json(feeds);
     });
 });
+
+
 router.post('/addFeed/:userId', (req, res) => {
     //피드 작성
     //params로 들어온 userId가 존재해야 feed추가
@@ -45,8 +47,6 @@ router.post('/addFeed/:userId', (req, res) => {
             }
         }
     });
-
-
 });
 
 router.delete('/deleteFeed/:feedId/:userId', (req, res) => {
@@ -114,13 +114,4 @@ router.put('/addLike/:feedId', (req, res) => {
     });
 });
 
-router.post('/addComment/:feedId', (req, res) => {
-    //댓글 달기
-});
-router.delete('/deleteComment', (req, res) => {
-    //댓글 삭제
-});
-router.put('/editCommnet', (req, res) => {
-    //댓글 수정
-});
 module.exports = router;

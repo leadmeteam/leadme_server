@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var feeds = require('./routes/feed');
+var comments = require('./routes/comment');
 var app = express();
 var mongoose = require('mongoose');
 
@@ -32,7 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api',feeds);
 app.use('/api', index);
 app.use('/api', users);
-
+app.use('/api',comments);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
