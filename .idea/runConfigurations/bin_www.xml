@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="bin\www" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="ssh://ubuntu@52.79.180.194:22/usr/bin/node" path-to-js-file="bin/www" working-dir="$PROJECT_DIR$">
+  <configuration default="false" name="bin\www" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="ssh://ubuntu@52.79.180.194:22/usr/bin/node" path-to-js-file="$PROJECT_DIR$/bin/www_leadme" working-dir="$PROJECT_DIR$">
     <envs>
       <env name="DEBUG" value="leadme_node:*" />
     </envs>

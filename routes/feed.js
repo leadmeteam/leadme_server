@@ -3,13 +3,38 @@ var router = express.Router();
 var User = require('../models/user');
 var Feed = require('../models/feed');
 
+
 router.get('/allFeed', (req, res) => {
-    //모든 피드 검색
-    Feed.find({}, (err, feeds) => {
-        if (err) res.status(403).end();
-        else
-            res.status(200).json(feeds);
+    Feed.find({},(err, feeds)=>{
+        if(err)
+            throw err;;
+            res.status(201).json(feeds);
     });
+});
+router.get('/firstFeed',(req,res)=>{
+    //첫번쨰 피드 요청.
+    Feed.find()
+        .sort({_id : -1})
+        .limit(6)
+        .exec((err, feeds)=>{
+
+        if(err || !feeds)
+            res.status(403).end();
+        res.status(201).json(feeds);
+        });
+});
+
+
+router.get('/feedScroll',(req,res)=>{
+
+    Feed.find({_id : {$lt : req.body.lastFeed}})
+        .sort({_id : -1})
+        .limit(6)
+        .exec((err, feeds)=>{
+        if(err || !feeds)
+            res.status(403).end();
+        res.status(201).json(feeds);
+        });
 });
 router.get('/getFeed/:standard', (req, res) => {
     //조건에 맞는 피드 검색
