@@ -47,19 +47,19 @@ router.get('/getFeed/:standard', (req, res) => {
 });
 
 
-router.post('/addFeed/:userId', (req, res) => {
+router.post('/addFeed', (req, res) => {
     //피드 작성
     //params로 들어온 userId가 존재해야 feed추가
     console.log(req.params);
     console.log(req.body);
-    User.findOne({_id: req.params.userId}, (err, user) => {
+    User.findOne({_id: req.body.userId}, (err, user) => {
         if (err) res.status(403).end();
         else {
             if (user == null)
                 res.status(403).end();
             else {
                 var newFeed = new Feed({
-                    userId: req.params.userId,
+                    userId: req.body.userId,
                     district: req.body.district,
                     feedBody: req.body.feedBody,
                 });
@@ -74,14 +74,14 @@ router.post('/addFeed/:userId', (req, res) => {
     });
 });
 
-router.delete('/deleteFeed/:feedId/:userId', (req, res) => {
+router.delete('/deleteFeed', (req, res) => {
     //피드 삭제
     //feedID로 찾고 userId와 다르면 err, 같으면 삭제
-    Feed.findOne({_id: req.params.feedId}, (err, feed) => {
+    Feed.findOne({_id: req.body.feedId}, (err, feed) => {
         if (err) res.status(403).end();
         else {
             console.log(feed);
-            if (feed.userId == req.params.userId) {
+            if (feed.userId == req.body.userId) {
                 feed.remove((err) => {
                     if (err) res.status(403).end();
                     else
@@ -121,9 +121,9 @@ router.put('/editFeed/:feedId/:userId', (req, res) => {
     });
 
 });
-router.put('/addLike/:feedId', (req, res) => {
+router.put('/addLike', (req, res) => {
     //좋아요 누르기
-    Feed.findOne({_id: req.params.feedId}, (err, feed) => {
+    Feed.findOne({_id: req.body.feedId}, (err, feed) => {
         if (err) res.status(403).end();
         else {
             var likes = parseInt(feed.like) + 1;
