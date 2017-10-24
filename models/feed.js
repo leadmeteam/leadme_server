@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 mongoose.Promise = Promise;
+var User = require('./user');
 var Schema = mongoose.Schema;
 
 var FeedShcema = new Schema({
@@ -14,6 +15,7 @@ var FeedShcema = new Schema({
         pic_url:{type:String},
         userName : {type:String},
         comment_likes : {type:String,default : "0"}
-    }]
+    }],
+    writer : {type:Schema.Types.ObjectId,ref : 'user'}
 });
 module.exports = mongoose.model('feed', FeedShcema);

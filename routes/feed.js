@@ -5,35 +5,41 @@ var Feed = require('../models/feed');
 
 
 router.get('/allFeed', (req, res) => {
-    Feed.find({},(err, feeds)=>{
-        if(err)
-            throw err;;
+
+    Feed.find()
+        .sort({_id: -1})
+        .populate('writer')
+        .exec((err, feeds) => {
+            if (err)
+                throw err;
             res.status(201).json(feeds);
-    });
+        });
+
 });
-router.get('/firstFeed',(req,res)=>{
+router.get('/firstFeed', (req, res) => {
     //첫번쨰 피드 요청.
     Feed.find()
-        .sort({_id : -1})
+        .sort({_id: -1})
         .limit(6)
-        .exec((err, feeds)=>{
+        .populate('writer')
+        .exec((err, feeds) => {
 
-        if(err || !feeds)
-            res.status(403).end();
-        res.status(201).json(feeds);
+            if (err || !feeds)
+                res.status(403).end();
+            res.status(201).json(feeds);
         });
 });
 
 
-router.get('/feedScroll',(req,res)=>{
+router.get('/feedScroll', (req, res) => {
 
-    Feed.find({_id : {$lt : req.body.lastFeed}})
-        .sort({_id : -1})
+    Feed.find({_id: {$lt: req.body.lastFeed}})
+        .sort({_id: -1})
         .limit(6)
-        .exec((err, feeds)=>{
-        if(err || !feeds)
-            res.status(403).end();
-        res.status(201).json(feeds);
+        .exec((err, feeds) => {
+            if (err || !feeds)
+                res.status(403).end();
+            res.status(201).json(feeds);
         });
 });
 router.get('/getFeed/:standard', (req, res) => {
@@ -49,7 +55,7 @@ router.get('/getFeed/:standard', (req, res) => {
 
 router.post('/addFeed', (req, res) => {
     //피드 작성
-    //params로 들어온 userId가 존재해야 feed추가
+    //body 들어온 userId가 존재해야 feed추가
     console.log(req.params);
     console.log(req.body);
     User.findOne({_id: req.body.userId}, (err, user) => {
@@ -62,6 +68,7 @@ router.post('/addFeed', (req, res) => {
                     userId: req.body.userId,
                     district: req.body.district,
                     feedBody: req.body.feedBody,
+                    writer: user._id
                 });
 
                 newFeed.save((err, newfeed) => {
@@ -73,6 +80,16 @@ router.post('/addFeed', (req, res) => {
         }
     });
 });
+////kill code
+// router.delete('/deleteAllFeed',(req, res)=>{
+//     Feed.remove({},(err)=>{
+//         if(err)
+//             res.status(403).end();
+//         else
+//             res.status(201).end();
+//     });
+// });
+
 
 router.delete('/deleteFeed', (req, res) => {
     //피드 삭제
@@ -96,19 +113,19 @@ router.delete('/deleteFeed', (req, res) => {
         }
     });
 });
-router.put('/editFeed/:feedId/:userId', (req, res) => {
+router.put('/editFeed', (req, res) => {
     //피드 수정
-    //params로 피드 id 입력, params에 있는 sender의 userid가
+    //body 피드 id 입력, body 있는 sender의 userid가
     //feed 모델의 userId와 같으면 편집 가능
 
-    Feed.findOne({_id: req.params.feedId}, (err, feed) => {
+    Feed.findOne({_id: req.body.feedId}, (err, feed) => {
         if (err) res.status(404).end();
         else {
-            if (feed.userId == req.params.userId) {
+            if (feed.userId == req.body.userId) {
                 //수정
                 feed.feedBody = req.body.feedBody;
-                feed.save((err,feed)=>{
-                    if(err)
+                feed.save((err, feed) => {
+                    if (err)
                         res.status(403).end();
                     else
                         res.status(201).json(feed);
@@ -117,7 +134,7 @@ router.put('/editFeed/:feedId/:userId', (req, res) => {
                 res.status(405).end();
             }
         }
-        
+
     });
 
 });
