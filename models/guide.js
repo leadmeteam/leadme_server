@@ -3,22 +3,19 @@ mongoose.Promise = Promise;
 var Schema = mongoose.Schema;
 
 var guideSchema = new Schema({
-  name: {
-    type: String,
-    requried: true
-  },
-  image: { // profile image <- userDB.image or upload
-    data: Buffer,
-    contentType: String
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'user'
   },
   userName: { // name of userDB
     type: String,
     requried: true
   },
-  languages: [{ // array of available languages with level
-    languageName: String,
-    languageLevel: String
-  }],
+  languages: { // array of available languages with level
+    mostConfidentLanguage : String,
+    availableLanguage : [{type:String}],
+    levelOfLanguage: {type:Number, default:0}
+  },
   regions: [{ // array of available region
     type: String
   }],
@@ -33,10 +30,27 @@ var guideSchema = new Schema({
     type: Boolean,
     default: true
   },
-  rating: { // rating for Sorting
-    type: Number,
-    default: 0,
-    required: true
+  createdDate: { // created Date for guide
+    type: String,
+    default: Date.now
+  },
+  wroteFeed: [{ // Feed by guide
+    type: Schema.Types.ObjectId,
+    ref: 'feed'
+  }],
+  rating: { // rating (0~5) license = 1 , totalFeed/5(max 2), totalFeedLike/10(max 2)
+    star: {
+      type: Number,
+      default: 0
+    },
+    totalFeed: {
+      type: Number,
+      default: 0
+    },
+    totalFeedLike: {
+      type: Number,
+      default: 0
+    }
   }
 });
 
