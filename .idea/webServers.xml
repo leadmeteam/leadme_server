@@ -2,7 +2,7 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="caf4167c-f067-4d40-9462-5ef544fdd0f9" name="euijoon_aws" url="http://52.79.180.194">
+      <webServer id="6cf1833c-d9e4-4d18-8398-eeb3d8d909c6" name="aws" url="http://52.79.180.194">
         <fileTransfer host="52.79.180.194" port="22" privateKey="C:\Users\admin\Desktop\jibcon_2.pem" accessType="SFTP" keyPair="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />

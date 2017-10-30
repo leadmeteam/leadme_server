@@ -13,7 +13,7 @@ var app = express();
 var mongoose = require('mongoose');
 
 
-mongoose.connect('mongodb://localhost/leadme_mongodb');
+mongoose.connect('mongodb://localhost/leadme_mongodb_2');
 var db = mongoose.connection;
 db.on('error', console.error);
 db.once('open', function(){
