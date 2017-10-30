@@ -122,6 +122,15 @@ router.post('/addFeed',uploads.single('feed_image'), (req, res) => {
 //     });
 // });
 
+router.get('/search/:qs', (req, res) => {
+        var regx = new RegExp(req.params.qs + '.*', "i");
+        console.log(regx);
+        console.log(typeof regx);
+        Feed.find({'feedBody': { $regex: regx}}, (err, feeds) => {
+        console.log(feeds);
+        res.status(200).json(feeds);
+        });
+})
 
 router.delete('/deleteFeed', (req, res) => {
     //피드 삭제
