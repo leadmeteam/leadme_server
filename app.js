@@ -9,6 +9,8 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var feeds = require('./routes/feed');
 var comments = require('./routes/comment');
+var guide = require('./routes/guide');
+
 var app = express();
 var mongoose = require('mongoose');
 
@@ -34,6 +36,8 @@ app.use('/api',feeds);
 app.use('/api', index);
 app.use('/api', users);
 app.use('/api',comments);
+app.use('/api', guide);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
