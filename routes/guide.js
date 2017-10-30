@@ -168,7 +168,7 @@ router.get('/guide/sortBy/:standard', (req, res) => { // 가이드 검색 정렬
 router.get('/guide/search/:qs',(req,res)=> {  // 가이드 이름 검색
   var regx= new regEXP(req.params.qs+'.*',"i");
 
-  Guide.find({"userName": {$regex:regx}},(err,guides)=>{
+  Guide.find({"userName": {$regex:regx}}).populate({path:"userId"}).exec((err,guides)=>{
     if (err) res.status(403).end();
     else {
       res.status(201).json(guides);
