@@ -5,164 +5,175 @@ var Guide = require('../models/guide');
 var Feed = require('../models/feed');
 
 router.get('/allGuides', (req, res) => { //모든 가이드 정보 조회
-    Guide.find().populate({
-        path: "userId",
-    }).exec((err, guides) => {
-        if (err) res.status(403).end();
-        else if (!guides) res.json({
-            message: "nobody guides"
-        })
-        else {
-            res.status(201).json(guides);
-        }
+  Guide.find().populate({
+    path: "userId",
+  }).exec((err, guides) => {
+    if (err) res.status(403).end();
+    else if (!guides) res.json({
+      message: "nobody guides"
     })
+    else {
+      res.status(201).json(guides);
+    }
+  })
 });
 
 router.post('/guide/delete', (req, res) => { // 가이드 삭제
-    Guide.findOneAndRemove({
-        "userId": req.body.userId
-    }, (err) => {
-        if (err) res.status(403).end();
-        else {
-            res.status(201).json({
-                message: "delete sucess!"
-            });
-        }
-    })
+  Guide.findOneAndRemove({
+    "userId": req.body.userId
+  }, (err) => {
+    if (err) res.status(403).end();
+    else {
+      res.status(201).json({
+        message: "delete sucess!"
+      });
+    }
+  })
 });
 
-router.post('/guide/signUp', (req, res) => { //가이드 가입 및 유저제 디비 연결
-    var newGuide = new Guide({
-        userId: req.body.userId,
-        regions: req.body.regions,
-        languages: {
-            mostConfidentLanguage: req.body.mostConfidentLanguage,
-            availableLanguage: req.body.availableLanguage,
-            levelOfLanguage: req.body.levelOfLanguage
-        },
-        license: req.body.license,
-        introduction: req.body.introduction,
-        userName: ""
-    });
+router.post('/guide/signUp', (req, res) => { //가이드 가입 및 유저 디비 연결
+  var newGuide = new Guide({
+    userId: req.body.userId,
+    regions: req.body.regions,
+    languages: {
+      mostConfidentLanguage: req.body.mostConfidentLanguage,
+      availableLanguage: req.body.availableLanguage,
+      levelOfLanguage: req.body.levelOfLanguage
+    },
+    license: req.body.license,
+    introduction: req.body.introduction,
+    userName: ""
+  });
 
-    Guide.findOne({
-        "userId": req.body.userId
-    }, (err, result) => {
-        console.log(result)
+  Guide.findOne({
+    "userId": req.body.userId
+  }, (err, result) => {
+    console.log(result)
+    if (err) res.status(403).json(err);
+    else if (result) res.status(201).json({
+      message: "already Guide"
+    });
+    else {
+      User.findById(req.body.userId, (err, user) => {
         if (err) res.status(403).json(err);
-        else if (result) res.status(201).json({
-            message: "already Guide"
+        else if (!user) res.status(404).json({
+          error: 'user cant found!'
         });
         else {
-            User.findById(req.body.userId, (err, user) => {
-                if (err) res.status(403).json(err);
-                else if (!user) res.status(404).json({
-                    error: 'user cant found!'
-                });
-                else {
-                    newGuide.userName = user.last_name + user.first_name;
+          newGuide.userName = user.last_name + user.first_name;
 
-                    newGuide.save((err, guide) => {
-                        if (err) res.status(501).json(err);
-                        else res.json({
-                            message: "guide active"
-                        });
-                    });
-                }
+          newGuide.save((err, guide) => {
+            if (err) res.status(501).json(err);
+            else res.json({
+              message: "guide active"
             });
+          });
         }
-    });
+      });
+    }
+  });
 });
 
 router.post('/guide', (req, res) => { //가이드 정보 조회 INPUT(userId) -> OUTPUT(guide정보 객체)
-    Guide.findOne({
-        "userId": req.body.userId
-    }).populate({
-        path: "userId"
-    }).exec((err, guide) => {
-        if (err) res.status(403).json(err);
-        else if (!guide) res.status(201).json({
-            message: "Not Guide"
-        })
-        else res.status(201).json(guide)
+  Guide.findOne({
+    "userId": req.body.userId
+  }).populate({
+    path: "userId"
+  }).exec((err, guide) => {
+    if (err) res.status(403).json(err);
+    else if (!guide) res.status(201).json({
+      message: "Not Guide"
     })
+    else res.status(201).json(guide)
+  })
 });
 
 router.post('/guide/modify', (req, res) => { //가이드 정보 변경
-    var userId = req.body.userId;
-    var modifyGuide = {
-        regions: req.body.regions,
-        languages: {
-            mostConfidentLanguage: req.body.mostConfidentLanguage,
-            availableLanguage: req.body.availableLanguage,
-            levelOfLanguage: req.body.levelOfLanguage
-        },
-        license: req.body.license,
-        introduction: req.body.introduction,
-        userName: req.body.userName,
-        activation: req.body.activation,
-        createdDate: Date.now()
-    };
+  var userId = req.body.userId;
+  var modifyGuide = {
+    regions: req.body.regions,
+    languages: {
+      mostConfidentLanguage: req.body.mostConfidentLanguage,
+      availableLanguage: req.body.availableLanguage,
+      levelOfLanguage: req.body.levelOfLanguage
+    },
+    license: req.body.license,
+    introduction: req.body.introduction,
+    userName: req.body.userName,
+    activation: req.body.activation,
+    createdDate: Date.now()
+  };
 
-    Guide.findOneAndUpdate({
-        "userId": userId
-    }, {
-        $set: modifyGuide
-    }, (err, guide) => {
-        if (err) res.status(403).json(err);
-        else if (!guide) res.status(201).json({
-            message: "Not Guide"
-        })
-        else res.status(201).json({
-                message: "modify Sucess!!"
-            });
+  Guide.findOneAndUpdate({
+    "userId": userId
+  }, {
+    $set: modifyGuide
+  }, (err, guide) => {
+    if (err) res.status(403).json(err);
+    else if (!guide) res.status(201).json({
+      message: "Not Guide"
+    })
+    else res.status(201).json({
+      message: "modify Sucess!!"
     });
+  });
 });
 
 router.post('/guide/activeToggle', (req, res) => { // 가이드 활동상태 토글
-    Guide.findOne({
-        "userId": req.body.userId
-    }).populate({
-        path: "userId"
-    }).exec((err, guide) => {
-        if (err) res.status(403).json(err);
-        else if (!guide) res.status(201).json({
-            message: "Not Guide"
-        })
-        else {
-            guide.update({
-                $set: {
-                    activation: !guide.activation
-                }
-            }, (err) => {
-                if (err) res.status(403).json(err);
-                else res.status(201).json({
-                    message: "toggle sucess!"
-                })
-            });
+  Guide.findOne({
+    "userId": req.body.userId
+  }).populate({
+    path: "userId"
+  }).exec((err, guide) => {
+    if (err) res.status(403).json(err);
+    else if (!guide) res.status(201).json({
+      message: "Not Guide"
+    })
+    else {
+      guide.update({
+        $set: {
+          activation: !guide.activation
         }
-    });
+      }, (err) => {
+        if (err) res.status(403).json(err);
+        else res.status(201).json({
+          message: "toggle sucess!"
+        })
+      });
+    }
+  });
 });
 
 router.get('/guide/sortBy/:standard', (req, res) => { // 가이드 검색 정렬
-    var standard = {}; //정렬 기준
-    var sorting = -1; //오름차순 : 1, 내림차순 : -1
-    if (req.params.standard == 0) standard["rating.star"] = sorting; // 파라미터 0 이면 레이팅 솔팅
-    else if (req.params.standard == 1) standard["createdDate"] = sorting; // 파라미터 1이면 최신순
+  var standard = {}; //정렬 기준
+  var sorting = -1; //오름차순 : 1, 내림차순 : -1
+  if (req.params.standard == 0) standard["rating.star"] = sorting; // 파라미터 0 이면 레이팅 솔팅
+  else if (req.params.standard == 1) standard["createdDate"] = sorting; // 파라미터 1이면 최신순
 
-    Guide.find({
-        "activation": true
-    }).sort(standard).populate({
-        path: "userId"
-    }).exec((err, guides) => {
-        if (err) res.status(403).end();
-        else if (!guides) res.json({
-            message: "nobody guides"
-        })
-        else {
-            res.status(201).json(guides);
-        }
-    });
+  Guide.find({
+    "activation": true
+  }).sort(standard).populate({
+    path: "userId"
+  }).exec((err, guides) => {
+    if (err) res.status(403).end();
+    else if (!guides) res.json({
+      message: "nobody guides"
+    })
+    else {
+      res.status(201).json(guides);
+    }
+  });
+});
+
+router.get('/guide/search/:qs',(req,res)=> {  // 가이드 이름 검색
+  var regx= new regEXP(req.params.qs+'.*',"i");
+
+  Guide.find({"userName": {$regex:regx}},(err,guides)=>{
+    if (err) res.status(403).end();
+    else {
+      res.status(201).json(guides);
+    }
+  })
 });
 
 // router.post('/guide/findByName', (req, res) => { // 이름으로 가이드들 검색
