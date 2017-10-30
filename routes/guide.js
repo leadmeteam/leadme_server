@@ -88,6 +88,37 @@ router.post('/guide', (req, res) => { //가이드 정보 조회 INPUT(userId) ->
   })
 });
 
+router.post('/guide/modify', (req, res) => { //가이드 정보 변경
+  var userId = req.body.userId;
+  var modifyGuide = {
+    regions: req.body.regions,
+    languages: {
+      mostConfidentLanguage: req.body.mostConfidentLanguage,
+      availableLanguage: req.body.availableLanguage,
+      levelOfLanguage: req.body.levelOfLanguage
+    },
+    license: req.body.license,
+    introduction: req.body.introduction,
+    userName: req.body.userName,
+    activation: req.body.activation,
+    createdDate: Date.now()
+  };
+
+  Guide.findOneAndUpdate({
+    "userId": userId
+  }, {
+    $set: modifyGuide
+  }, (err, guide) => {
+    if (err) res.status(403).json(err);
+    else if (!guide) res.status(201).json({
+      message: "Not Guide"
+    })
+    else res.status(201).json({
+      message: "modify Sucess!!"
+    });
+  });
+});
+
 router.post('/guide/activeToggle', (req, res) => { // 가이드 활동상태 토글
   Guide.findOne({
     "userId": req.body.userId
@@ -114,13 +145,11 @@ router.post('/guide/activeToggle', (req, res) => { // 가이드 활동상태 토
 });
 
 router.get('/guide/sortBy/:standard', (req, res) => { // 가이드 검색 정렬
-  var standard = {};  //정렬 기준
-  var sorting = -1;   //오름차순 : 1, 내림차순 : -1
-  if (req.params.standard == 0) standard["rating.star"] = sorting;
-  else if (req.params.standard == 1) standard["createdDate"] = sorting;
+  var standard = {}; //정렬 기준
+  var sorting = -1; //오름차순 : 1, 내림차순 : -1
+  if (req.params.standard == 0) standard["rating.star"] = sorting; // 파라미터 0 이면 레이팅 솔팅
+  else if (req.params.standard == 1) standard["createdDate"] = sorting; // 파라미터 1이면 최신순
 
-  console.log(req.params.standard)
-  console.log(standard)
   Guide.find({
     "activation": true
   }).sort(standard).populate({
@@ -293,5 +322,62 @@ router.get('/guide/sortBy/:standard', (req, res) => { // 가이드 검색 정렬
 //     }
 //   })
 // });
-
+//
+// function fetchRatingFirst(userId, callback) { // guide's rating 패치 함수 *아직 확인 못함
+//   var licensePoint = 0;
+//   var totalFeedPoint = 0;
+//   var totalFeedLikePoint = 0;
+//   var newStar = 0;
+//   var totalLike = 0;
+//   var arrayLength = 0;
+//   Guide.findOne({
+//     "userId": userId
+//   }).populate("wroteFeed").exec((err, guide) => {
+//     if (err) callback(err);
+//     else if (!guide) callback({
+//       message: "cant find guide"
+//     });
+//     else {
+//       forEach(guide.wroteFeed){
+//         totalLike = totalLike+ guide.wroteFeed.like;
+//         arrayLength++;
+//         if(guide.wroteFeed.length == arrayLength){
+//           guide.update({
+//             $set: {
+//               "rating.totalFeed": guide.wroteFeed.length,
+//               "rating.totalFeedLike": totalLike
+//             }
+//           },(err)=>{
+//             if (err) callback(err);
+//             else{
+//               Guide.findOne({
+//                 "userId": userId
+//               }, (err, guide) => {
+//                 if (err) callback(err);
+//                 else if (!guide) callback({
+//                   message: "cant find guide"
+//                 });
+//                 else {
+//                   if (guide.license) licensePoint = 1;
+//                   totalFeedPoint = parseInt(guide.rating.Feed / 5);
+//                   if (totalFeedPoint > 2) totalFeedPoint = 2;
+//                   totalFeedLikePoint = parseInt(guide.rating.totalFeedLike / 10);
+//                   if (totalFeedLikePoint) totalFeedLikePoint = 2;
+//                   newStar = licensePoint + totalFeedPoint + totalFeedLikePoint;
+//
+//                   guide.update({$set:{
+//                     "star" :newStar
+//                   }},(err)=>{
+//                     if (err) callback(err);
+//                     else callback(json({message:"fetch sucess!"}))
+//                   })
+//                 }
+//               });
+//             }
+//           })
+//         }
+//       }
+//     }
+//   })
+// }
 module.exports = router;
