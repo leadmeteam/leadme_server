@@ -8,7 +8,9 @@ var FeedShcema = new Schema({
     district : {type:String, required : true},//피드 기준=장소 (기준 추가 예정)
     createdDate : {type :Date, default : Date.now},
     feedBody : {type :String, default : ""},
-    like : {type : String,default : "0"},
+
+    likes:[String],
+
     comment : [{
         userId : {type:String},//댓글 단 사람의 User._id
         commentBody : {type:String},
@@ -16,6 +18,7 @@ var FeedShcema = new Schema({
         userName : {type:String},
         comment_likes : {type:String,default : "0"}
     }],
+
     feed_pic_url : {type:String, default:""},
     writer : {type:Schema.Types.ObjectId,ref : 'user'}
 });

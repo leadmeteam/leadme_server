@@ -112,15 +112,15 @@ router.post('/addFeed',uploads.single('feed_image'), (req, res) => {
         }
     });
 });
-// //kill code just for debug
-// router.delete('/deleteAllFeed',(req, res)=>{
-//     Feed.remove({},(err)=>{
-//         if(err)
-//             res.status(403).end();
-//         else
-//             res.status(201).end();
-//     });
-// });
+//kill code just for debug
+router.delete('/deleteAllFeed',(req, res)=>{
+    Feed.remove({},(err)=>{
+        if(err)
+            res.status(403).end();
+        else
+            res.status(201).end();
+    });
+});
 
 router.get('/search/:qs', (req, res) => {
         var regx = new RegExp(req.params.qs + '.*', "i");
@@ -181,17 +181,39 @@ router.put('/editFeed', (req, res) => {
 });
 router.put('/addLike', (req, res) => {
     //좋아요 누르기
-    Feed.findOne({_id: req.body.feedId}, (err, feed) => {
-        if (err) res.status(403).end();
-        else {
-            var likes = parseInt(feed.like) + 1;
-            feed.like = likes.toString();
+    // Feed.findOne({_id: req.body.feedId}, (err, feed) => {
+    //     if (err) res.status(403).end();
+    //     else {
+    //         var likes = parseInt(feed.like) + 1;
+    //         feed.like = likes.toString();
+    //
+    //         feed.save((err, feed) => {
+    //             if (err)
+    //                 res.status(403).end();
+    //             else
+    //                 res.status(201).json(feed);
+    //         });
+    //     }
+    // });
+    Feed.findOne({_id:req.body.feedId},(err,feed)=>{
+        if(err)
+            res.status(403).end();
+        else{
+            let index = feed.likes.indexOf(req.body.userId);
+            let hasliked = (index === -1)?false :true;
+            console.log(hasliked);
+            console.log(index);
+            if(!hasliked)
+            {
+                feed.likes.push(req.body.userId);
+            }
+            else
+                feed.likes.splice(index,1);
 
-            feed.save((err, feed) => {
-                if (err)
-                    res.status(403).end();
-                else
-                    res.status(201).json(feed);
+            feed.save((err,savedFeed)=>{
+                if(err)
+                    throw err;
+                res.status(201).json(savedFeed);
             });
         }
     });
