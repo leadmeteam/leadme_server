@@ -40,6 +40,8 @@ router.post('/addComment/:feedId', (req, res) => {
                     console.log('addcomment user find error');
                 } else {
                     var newComment = {
+                        first_name : user.first_name,
+                        last_name : user.last_name,
                         userId: user._id,
                         pic_url: user.pic_url,
                         commentBody: req.body.commentBody

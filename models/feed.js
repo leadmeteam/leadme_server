@@ -12,6 +12,8 @@ var FeedShcema = new Schema({
     likes: [String],
 
     comment: [{
+        first_name : {type:String},
+        last_name : {type:String},
         userId: {type: String},//댓글 단 사람의 User._id
         commentBody: {type: String},
         pic_url: {type: String},
