@@ -16,6 +16,7 @@ var FeedShcema = new Schema({
         userName : {type:String},
         comment_likes : {type:String,default : "0"}
     }],
+    feed_pic_url : {type:String, default:""},
     writer : {type:Schema.Types.ObjectId,ref : 'user'}
 });
 module.exports = mongoose.model('feed', FeedShcema);

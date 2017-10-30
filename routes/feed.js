@@ -1,7 +1,30 @@
 var express = require('express');
 var router = express.Router();
+var configs = require('../bin/config');
 var User = require('../models/user');
 var Feed = require('../models/feed');
+var multer = require('multer');
+var storage = multer.diskStorage({
+    destination : function(req,file,cb){
+        cb(null,'./public/images');
+    },
+    filename : function(req,file,cb){
+        console.log('multer');
+       // console.log(file);
+        cb(null,file.originalname);
+    }
+});
+var uploads = multer({storage: storage});
+
+
+router.post('/upload',uploads.single('avatar'),function(req,res,next){
+    console.log(req.file);
+    console.log(req.body);
+    res.status(201).end();
+});
+
+
+module.exports = router;
 
 
 router.get('/allFeed', (req, res) => {
@@ -53,10 +76,10 @@ router.get('/getFeed/:standard', (req, res) => {
 });
 
 
-router.post('/addFeed', (req, res) => {
+router.post('/addFeed',uploads.single('feed_image'), (req, res) => {
     //피드 작성
     //body 들어온 userId가 존재해야 feed추가
-    console.log(req.params);
+    console.log(req.body.userId);
     console.log(req.body);
     User.findOne({_id: req.body.userId}, (err, user) => {
         if (err) res.status(403).end();
@@ -64,11 +87,20 @@ router.post('/addFeed', (req, res) => {
             if (user == null)
                 res.status(403).end();
             else {
+                var fileName ="";
+                if(req.file!=undefined && req.file.originalname != undefined)
+                {
+                    fileName = req.file.originalname;
+                    fileName = configs.imageStorage+'/'+fileName;
+                    console.log('fileName : '+fileName);
+                }
                 var newFeed = new Feed({
                     userId: req.body.userId,
                     district: req.body.district,
                     feedBody: req.body.feedBody,
-                    writer: user._id
+                    writer: user._id,
+                    feed_pic_url: fileName
+
                 });
 
                 newFeed.save((err, newfeed) => {
@@ -80,7 +112,7 @@ router.post('/addFeed', (req, res) => {
         }
     });
 });
-////kill code
+// //kill code just for debug
 // router.delete('/deleteAllFeed',(req, res)=>{
 //     Feed.remove({},(err)=>{
 //         if(err)

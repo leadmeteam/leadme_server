@@ -69,6 +69,8 @@ function facebookLogin(access_token, res) {
 }
 
 
+
+
 router.post('/signup', (req, res) => {
 
     console.log('accessToken : '+req.body.accesstoken);
