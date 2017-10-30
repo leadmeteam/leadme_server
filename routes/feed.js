@@ -112,15 +112,15 @@ router.post('/addFeed',uploads.single('feed_image'), (req, res) => {
         }
     });
 });
-//kill code just for debug
-router.delete('/deleteAllFeed',(req, res)=>{
-    Feed.remove({},(err)=>{
-        if(err)
-            res.status(403).end();
-        else
-            res.status(201).end();
-    });
-});
+// //kill code just for debug
+// router.delete('/deleteAllFeed',(req, res)=>{
+//     Feed.remove({},(err)=>{
+//         if(err)
+//             res.status(403).end();
+//         else
+//             res.status(201).end();
+//     });
+// });
 
 router.get('/search/:qs', (req, res) => {
         var regx = new RegExp(req.params.qs + '.*', "i");

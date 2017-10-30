@@ -75,8 +75,6 @@ router.post('/signup', (req, res) => {
 
     console.log('accessToken : '+req.body.accesstoken);
     facebookLogin(req.body.accesstoken,res);
-  
-
 
 });
 
