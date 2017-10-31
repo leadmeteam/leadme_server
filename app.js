@@ -10,6 +10,8 @@ var users = require('./routes/users');
 var feeds = require('./routes/feed');
 var comments = require('./routes/comment');
 var guide = require('./routes/guide');
+var guide = require('./routes/mypage');
+var guide = require('./routes/messenger');
 
 var app = express();
 var mongoose = require('mongoose');
@@ -37,6 +39,8 @@ app.use('/api/index', index);
 app.use('/api/users', users);
 app.use('/api/comments',comments);
 app.use('/api/guide', guide);
+app.use('/api/guide', mypage);
+app.use('/api/guide', messenger);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
