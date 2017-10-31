@@ -7,7 +7,7 @@ var Feed = require('../models/feed');
 router.post('/mypage/likedFeeds',(req, res)=>{  // 좋아요한 피드들
   var userId = req.body.userId;
 
-  Feed.find({"like.userId":userId}, (err,feeds)=>{
+  Feed.find({"like.userId":userId}).populate({path:"writer"}, (err,feeds)=>{
     if (err) res.status(403).end();
     else if (!feeds) res.status(403).json({
       message: "no feed"
@@ -21,7 +21,7 @@ router.post('/mypage/likedFeeds',(req, res)=>{  // 좋아요한 피드들
 router.post('/mypage/wrotedFeeds',(req, res)=>{ // 내가 쓴 피드들
   var userId = req.body.userId;
 
-  Feed.find({"userId":userId},(err,feeds)=>{
+  Feed.find({"userId":userId}).populate({path:"writer"},(err,feeds)=>{
     if (err) res.status(403).end();
     else if (!feeds) res.status(403).json({
       message: "no feed"
