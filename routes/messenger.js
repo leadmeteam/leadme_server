@@ -11,7 +11,7 @@ router.post('/message/send', (req, res) => { // 메세지 전송 -> 디비 입�
 
   User.findById(req.body.senderId,(err, user)=>{
     if (err) res.status(403).end();
-    else if (!user) res.status(201).json({
+    else if (!user) res.status(403).json({
       message: "no user!"
     })
     else
@@ -55,7 +55,7 @@ router.post('/message/openChat', (req,res)=>{ // 메세지창 오픈
 
   User.findById(req.body.senderId,(err, user)=>{
     if (err) res.status(403).end();
-    else if (!user) res.status(201).json({
+    else if (!user) res.status(403).json({
       message: "no user!"
     })
     else
