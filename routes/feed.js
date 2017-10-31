@@ -54,7 +54,7 @@ router.get('/firstFeed', (req, res) => {
 });
 
 
-router.get('/feedScroll', (req, res) => {
+router.post('/feedScroll', (req, res) => {
 
     Feed.find({_id: {$lt: req.body.lastFeed}})
         .sort({_id: -1})
