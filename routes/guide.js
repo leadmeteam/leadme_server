@@ -9,7 +9,7 @@ router.get('/allGuides', (req, res) => { //모든 가이드 정보 조회
     path: "userId",
   }).exec((err, guides) => {
     if (err) res.status(403).end();
-    else if (!guides) res.json({
+    else if (!guides) res.status(403).json({
       message: "nobody guides"
     })
     else {
@@ -50,7 +50,7 @@ router.post('/guide/signUp', (req, res) => { //가이드 가입 및 유저 디�
   }, (err, result) => {
     console.log(result)
     if (err) res.status(403).json(err);
-    else if (result) res.status(201).json({
+    else if (result) res.status(403).json({
       message: "already Guide"
     });
     else {
@@ -64,7 +64,7 @@ router.post('/guide/signUp', (req, res) => { //가이드 가입 및 유저 디�
 
           newGuide.save((err, guide) => {
             if (err) res.status(501).json(err);
-            else res.json({
+            else res.status(201).json({
               message: "guide active"
             });
           });
@@ -81,7 +81,7 @@ router.post('/guide', (req, res) => { //가이드 정보 조회 INPUT(userId) ->
     path: "userId"
   }).exec((err, guide) => {
     if (err) res.status(403).json(err);
-    else if (!guide) res.status(201).json({
+    else if (!guide) res.status(403).json({
       message: "Not Guide"
     })
     else res.status(201).json(guide)
@@ -110,7 +110,7 @@ router.post('/guide/modify', (req, res) => { //가이드 정보 변경
     $set: modifyGuide
   }, (err, guide) => {
     if (err) res.status(403).json(err);
-    else if (!guide) res.status(201).json({
+    else if (!guide) res.status(403).json({
       message: "Not Guide"
     })
     else res.status(201).json({
@@ -126,7 +126,7 @@ router.post('/guide/activeToggle', (req, res) => { // 가이드 활동상태 토
     path: "userId"
   }).exec((err, guide) => {
     if (err) res.status(403).json(err);
-    else if (!guide) res.status(201).json({
+    else if (!guide) res.status(403).json({
       message: "Not Guide"
     })
     else {
@@ -156,7 +156,7 @@ router.get('/guide/sortBy/:standard', (req, res) => { // 가이드 검색 정렬
     path: "userId"
   }).exec((err, guides) => {
     if (err) res.status(403).end();
-    else if (!guides) res.json({
+    else if (!guides) res.status(403).json({
       message: "nobody guides"
     })
     else {
