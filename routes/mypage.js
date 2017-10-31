@@ -9,7 +9,7 @@ router.post('/mypage/likedFeeds',(req, res)=>{  // 좋아요한 피드들
 
   Feed.find({"like.userId":userId}, (err,feeds)=>{
     if (err) res.status(403).end();
-    else if (!feeds) res.json({
+    else if (!feeds) res.status(403).json({
       message: "no feed"
     })
     else {
@@ -23,7 +23,7 @@ router.post('/mypage/wrotedFeeds',(req, res)=>{ // 내가 쓴 피드들
 
   Feed.find({"userId":userId},(err,feeds)=>{
     if (err) res.status(403).end();
-    else if (!feeds) res.json({
+    else if (!feeds) res.status(403).json({
       message: "no feed"
     })
     else {
